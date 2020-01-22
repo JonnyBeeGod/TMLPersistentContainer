@@ -8,6 +8,7 @@
 import Foundation
 import CoreData
 
+@available(macOS 10.12, iOS 10.0, tvOS 10.0, watchOS 3.0, *)
 protocol PersistentContainerProtocol: PersistentContainerMigratable {
     func destroyStores() throws
 }
