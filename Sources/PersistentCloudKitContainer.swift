@@ -15,7 +15,7 @@ import CoreData
 /// See [the user guide](https://johnfairh.github.io/TMLPersistentContainer/usage.html) for more details.
 ///
 @available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
-open class PersistentCloudKitContainer: NSPersistentCloudKitContainer, PersistentContainerMigratable, LogMessageEmitter {
+open class PersistentCloudKitContainer: NSPersistentCloudKitContainer, PersistentContainerMigratable, PersistentContainerProtocol, LogMessageEmitter {
 
     /// Background queue for running store operations.
     private let dispatchQueue = DispatchQueue(label: "PersistentContainer", qos: .utility)
@@ -118,30 +118,6 @@ open class PersistentCloudKitContainer: NSPersistentCloudKitContainer, Persisten
         self.modelVersionOrder = modelVersionOrder
         self.logMessageHandler = logMessageHandler
         super.init(name: name, managedObjectModel: model)
-    }
-
-    /// Cleanly empty all the persistent stores described by `persistentStoreDescriptions`.
-    /// Typically useful to reset the app to a fresh state before loading the stores.
-    ///
-    /// - Attention: May not remove files from disk. In the case of SQLite3 stores, database files
-    ///              making up an empty store are left.
-    ///
-    /// - Attention: Goodness knows what this will do with custom stores. There does not appear to be
-    ///              an API into the `NSPersistentStore` tree to implement this operation.
-    ///
-    /// - Attention: Not atomic with respect to multiple stores. The routine attempts to destroy
-    ///              each store one by one; the first destroy operation to fail causes the entire
-    ///              routine to fail.
-    ///
-    /// - Throws: Errors thrown by `NSPersistentStoreCoordinator.destroyPersistentStore(at:ofType:options:)` which
-    ///           is undocumented: assumed to be filesystem access errors that the app should probably consider as
-    ///           fatal. Does *not* throw an error if a persistent store does not currently exist.
-    ///
-    open func destroyStores() throws {
-        try persistentStoreDescriptions.forEach { description in
-            log(.info, "Destroying store \(description)")
-            try description.destroyStore(coordinator: self.persistentStoreCoordinator)
-        }
     }
 
     /// Begin loading and migrating the persistent stores mentioned in `persistentStoreDescriptions` that have
