@@ -18,7 +18,7 @@ import CoreData
 open class PersistentCloudKitContainer: NSPersistentCloudKitContainer, PersistentContainerMigratable, PersistentContainerProtocol, LogMessageEmitter {
 
     /// Background queue for running store operations.
-    private let dispatchQueue = DispatchQueue(label: "PersistentContainer", qos: .utility)
+    private let dispatchQueue = DispatchQueue(label: "CloudKitPersistentContainer", qos: .utility)
 
     /// User's model version order.
     let modelVersionOrder: ModelVersionOrder
