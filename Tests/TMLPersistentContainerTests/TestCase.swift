@@ -8,7 +8,7 @@
 import Foundation
 import CoreData
 import XCTest
-import TMLPersistentContainer
+@testable import TMLPersistentContainer
 
 /// Common base class for container tests holding utilities.
 open class TestCase: XCTestCase {

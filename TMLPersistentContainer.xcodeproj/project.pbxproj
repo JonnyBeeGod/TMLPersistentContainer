@@ -611,7 +611,6 @@
 					};
 					52D6D9851BEFF229002C0205 = {
 						CreatedOnToolsVersion = 7.1;
-						DevelopmentTeam = D243YH28Y6;
 						LastSwiftMigration = 1020;
 						ProvisioningStyle = Automatic;
 					};
@@ -1144,7 +1143,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = D243YH28Y6;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Configs/TMLPersistentContainerTests.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.TMLPersistentContainer.TMLPersistentContainer-iOS-Tests";
@@ -1160,7 +1159,7 @@
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = D243YH28Y6;
+				DEVELOPMENT_TEAM = "";
 				INFOPLIST_FILE = Configs/TMLPersistentContainerTests.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.TMLPersistentContainer.TMLPersistentContainer-iOS-Tests";
