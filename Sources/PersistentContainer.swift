@@ -13,6 +13,7 @@ protocol PersistentContainerProtocol: PersistentContainerMigratable {
     func destroyStores() throws
 }
 
+@available(macOS 10.12, iOS 10.0, tvOS 10.0, watchOS 3.0, *)
 extension PersistentContainerProtocol {
     /// Cleanly empty all the persistent stores described by `persistentStoreDescriptions`.
     /// Typically useful to reset the app to a fresh state before loading the stores.
