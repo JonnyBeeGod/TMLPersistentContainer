@@ -1,10 +1,3 @@
-//
-//  PersistentContainer.swift
-//  TMLPersistentContainer
-//
-//  Distributed under the ISC license, see LICENSE.
-//
-
 import Foundation
 import CoreData
 
@@ -21,8 +14,8 @@ import CoreData
 ///
 /// See [the user guide](https://johnfairh.github.io/TMLPersistentContainer/usage.html) for more details.
 ///
-@available(macOS 10.12, iOS 10.0, tvOS 10.0, watchOS 3.0, *)
-open class PersistentContainer: NSPersistentContainer, PersistentContainerMigratable, LogMessageEmitter {
+@available(macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+open class PersistentCloudKitContainer: NSPersistentCloudKitContainer, PersistentContainerMigratable, LogMessageEmitter {
 
     /// Background queue for running store operations.
     private let dispatchQueue = DispatchQueue(label: "PersistentContainer", qos: .utility)
