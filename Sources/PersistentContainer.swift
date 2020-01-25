@@ -184,8 +184,7 @@ open class PersistentContainer: NSPersistentContainer, PersistentContainerMigrat
                             modelVersionOrder: ModelVersionOrder = .compare,
                             logMessageHandler: LogMessage.Handler? = nil) {
 
-        // This is all pretty messy, don't want to be doing this stuff in initializer but
-        // can't see how to avoid.  No self so logging ugly too :(
+        // No self so logging is ugly :(
         //
         // Investigation does show that NSPC.init(string) searches for .momds and NOT .moms.
         

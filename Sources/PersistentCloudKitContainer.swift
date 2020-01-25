@@ -61,31 +61,22 @@ open class PersistentCloudKitContainer: NSPersistentCloudKitContainer, Persisten
                             modelVersionOrder: ModelVersionOrder = .compare,
                             logMessageHandler: LogMessage.Handler? = nil) {
 
-        // This is all pretty messy, don't want to be doing this stuff in initializer but
-        // can't see how to avoid.  No self so logging ugly too :(
+        // No self so logging is ugly :(
         //
         // Investigation does show that NSPC.init(string) searches for .momds and NOT .moms.
-        for bundle in bundles {
-            if let url = bundle.url(forResource: name, withExtension: "momd") {
-                if let model = NSManagedObjectModel(contentsOf: url) {
-                    logMessageHandler?(LogMessage(.info, "Using \(url) for model \(name)."))
-                    self.init(name: name,
-                              managedObjectModel: model,
-                              bundles: bundles,
-                              modelVersionOrder: modelVersionOrder,
-                              logMessageHandler: logMessageHandler)
-                    return                                    /* EXIT FUNCTION */
-                } else {
-                    logMessageHandler?(LogMessage(.warning, "Found \(url) but cannot load it as NSManagedObjectModel."))
-                }
-            }
+        
+        let firstModelFromBundles = bundles.managedObjectModels(with: name).first
+        
+        if firstModelFromBundles == nil {
+            logMessageHandler?(LogMessage(.error, "Found no models matching \(name), using empty NSManagedObjectModel."))
+        } else {
+            logMessageHandler?(LogMessage(.info, "Using \(firstModelFromBundles.debugDescription) for model \(name)."))
         }
-
-        // well...
-        logMessageHandler?(LogMessage(.error, "Found no models matching \(name), using empty NSManagedObjectModel."))
-
+        
+        let model = firstModelFromBundles ?? NSManagedObjectModel()
+        
         self.init(name: name,
-                  managedObjectModel: NSManagedObjectModel(),
+                  managedObjectModel: model,
                   bundles: bundles,
                   modelVersionOrder: modelVersionOrder,
                   logMessageHandler: logMessageHandler)
