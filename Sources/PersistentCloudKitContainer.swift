@@ -110,4 +110,35 @@ open class PersistentCloudKitContainer: NSPersistentCloudKitContainer, Persisten
         self.logMessageHandler = logMessageHandler
         super.init(name: name, managedObjectModel: model)
     }
+    
+    /// Begin loading and migrating the persistent stores mentioned in `persistentStoreDescriptions` that have
+    /// not already been loaded. The completion handler is called once for each such store on the main queue
+    /// indicating whether the store has been loaded successfully.
+    ///
+    /// If the store description has `shouldMigrateStoreAutomatically` set then the container automatically
+    /// attempts multi-step migration.  If the store description also has `shouldInferMappingModelAutomatically`
+    /// set then the multi-step migration can include the use of inferred mapping models and light-weight
+    /// migration.  Once any multi-step migration is complete, Core Data is invoked to load the store and set
+    /// up the stack for use.
+    ///
+    /// These flags are both on by default.
+    ///
+    /// If *any* of the store descriptions have `shouldAddStoreAsynchronously` set then this routine returns
+    /// immediately and *all* migrations occur on a background queue.  This flag is off by default.
+    ///
+    /// If the container has multiple stores then the container tries very hard to ensure either all stores
+    /// are migrated successfully or none are.
+    ///
+    /// - Parameter block: Callback made on the main queue for each store when it has either been loaded successfully
+    ///                    or failed to load.  The `Error` here can be anything provided by
+    ///                    `NSPersistentContainer.loadPersistentStores` as well as anything from `MigrationError`
+    ///                    in this package.
+    ///
+    open override func loadPersistentStores(completionHandler block: @escaping (NSPersistentStoreDescription, Error?) -> ()) {
+        let invokeCoreDataClosure = { block in
+            super.loadPersistentStores(completionHandler: block)
+        }
+        
+        loadPersistentStoresHelper(invokeCoreDataClosure: invokeCoreDataClosure, completionHandler: block)
+    }
 }
