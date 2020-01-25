@@ -10,6 +10,9 @@ import CoreData
 
 @available(macOS 10.12, iOS 10.0, tvOS 10.0, watchOS 3.0, *)
 protocol PersistentContainerProtocol: PersistentContainerMigratable {
+    /// Background queue for running store operations.
+    var dispatchQueue: DispatchQueue { get }
+    
     func destroyStores() throws
 }
 
@@ -38,6 +41,87 @@ extension PersistentContainerProtocol {
             try description.destroyStore(coordinator: self.persistentStoreCoordinator)
         }
     }
+    
+    func loadPersistentStoresHelper(invokeCoreDataClosure: @escaping ((_ block: @escaping (NSPersistentStoreDescription, Error?) -> ()) -> Void), completionHandler block: @escaping (NSPersistentStoreDescription, Error?) -> ()) {
+        // Filter out the stores that need loading to replicate the superclass API
+        // There are probably only a handful at most of these so no need to be terribly efficient
+        let storeURLs = persistentStoreCoordinator.persistentStores.compactMap { $0.url }
+
+        if storeURLs.count > 0 {
+            log(.info, "Already have loaded stores associated with container: \(storeURLs)")
+        }
+
+        var storesToLoad: [NSPersistentStoreDescription] = []
+
+        persistentStoreDescriptions.forEach { description in
+            guard let storeURL = description.url else {
+                log(.info, "Not migrating store \(description) because no URL present")
+                return
+            }
+            if !storeURL.isFileURL {
+                log(.info, "Not migrating store \(description) because not a file:// URL")
+            } else if !description.shouldMigrateStoreAutomatically {
+                log(.info, "Not migrating store \(storeURL) because shouldMigrateStoreAutomatically clear.")
+            } else if storeURLs.contains(description.fileURL) {
+                log(.info, "Not migrating store \(storeURL) because already loaded.")
+            } else {
+                storesToLoad.append(description)
+            }
+        }
+
+        guard storesToLoad.count > 0 else {
+            log(.warning, "Found no stores to load, invoking Core Data anyway.")
+            invokeCoreDataClosure(block)
+            return
+        }
+
+        // Load stores asynchronously if ANY of the stores have the async flag set.
+        let asyncMode = storesToLoad.reduce(false) { async, description in
+            async || description.shouldAddStoreAsynchronously
+        }
+
+        // Helper to deal with the sync/async version....
+        func doStoreMigration() {
+            var failures = false
+
+            migrateStores(descriptions: storesToLoad) { desc, error in
+                failures = true
+                self.log(.error, "Migration of store \(desc.fileURL) failed, sending user callback - \(error)")
+                if asyncMode {
+                    DispatchQueue.main.sync {
+                        block(desc, error)
+                    }
+                } else {
+                    block(desc, error)
+                }
+            }
+
+            // If we didn't get any failure callbacks then it's OK to call Core Data.
+            if !failures {
+                self.log(.info, "All store migration successful, invoking Core Data.")
+                if asyncMode {
+                    DispatchQueue.main.async {
+                        invokeCoreDataClosure(block)
+                    }
+                } else {
+                    invokeCoreDataClosure(block)
+                }
+            }
+        }
+
+        if asyncMode {
+            log(.info, "Found \(storesToLoad.count) to load, going to background.")
+
+            dispatchQueue.async {
+                self.log(.info, "In background, processing stores.")
+                doStoreMigration()
+                self.log(.debug, "Background thread ending.")
+            }
+        } else {
+            log(.info, "Found \(storesToLoad.count) to load, doing synchronously.")
+            doStoreMigration()
+        }
+    }
 }
 
 /// A container for a Core Data stack that provides automatic multi-step shortest-path
@@ -57,7 +141,7 @@ extension PersistentContainerProtocol {
 open class PersistentContainer: NSPersistentContainer, PersistentContainerMigratable, PersistentContainerProtocol, LogMessageEmitter {
 
     /// Background queue for running store operations.
-    private let dispatchQueue = DispatchQueue(label: "PersistentContainer", qos: .utility)
+    let dispatchQueue = DispatchQueue(label: "PersistentContainer", qos: .utility)
 
     /// User's model version order.
     let modelVersionOrder: ModelVersionOrder
@@ -183,83 +267,10 @@ open class PersistentContainer: NSPersistentContainer, PersistentContainerMigrat
     ///                    in this package.
     ///
     open override func loadPersistentStores(completionHandler block: @escaping (NSPersistentStoreDescription, Error?) -> ()) {
-        // Filter out the stores that need loading to replicate the superclass API
-        // There are probably only a handful at most of these so no need to be terribly efficient
-        let storeURLs = persistentStoreCoordinator.persistentStores.compactMap { $0.url }
-
-        if storeURLs.count > 0 {
-            log(.info, "Already have loaded stores associated with container: \(storeURLs)")
-        }
-
-        var storesToLoad: [NSPersistentStoreDescription] = []
-
-        persistentStoreDescriptions.forEach { description in
-            guard let storeURL = description.url else {
-                log(.info, "Not migrating store \(description) because no URL present")
-                return
-            }
-            if !storeURL.isFileURL {
-                log(.info, "Not migrating store \(description) because not a file:// URL")
-            } else if !description.shouldMigrateStoreAutomatically {
-                log(.info, "Not migrating store \(storeURL) because shouldMigrateStoreAutomatically clear.")
-            } else if storeURLs.contains(description.fileURL) {
-                log(.info, "Not migrating store \(storeURL) because already loaded.")
-            } else {
-                storesToLoad.append(description)
-            }
-        }
-
-        guard storesToLoad.count > 0 else {
-            log(.warning, "Found no stores to load, invoking Core Data anyway.")
+        let invokeCoreDataClosure = { block in
             super.loadPersistentStores(completionHandler: block)
-            return
         }
-
-        // Load stores asynchronously if ANY of the stores have the async flag set.
-        let asyncMode = storesToLoad.reduce(false) { async, description in
-            async || description.shouldAddStoreAsynchronously
-        }
-
-        // Helper to deal with the sync/async version....
-        func doStoreMigration() {
-            var failures = false
-
-            migrateStores(descriptions: storesToLoad) { desc, error in
-                failures = true
-                self.log(.error, "Migration of store \(desc.fileURL) failed, sending user callback - \(error)")
-                if asyncMode {
-                    DispatchQueue.main.sync {
-                        block(desc, error)
-                    }
-                } else {
-                    block(desc, error)
-                }
-            }
-
-            // If we didn't get any failure callbacks then it's OK to call Core Data.
-            if !failures {
-                self.log(.info, "All store migration successful, invoking Core Data.")
-                if asyncMode {
-                    DispatchQueue.main.async {
-                        super.loadPersistentStores(completionHandler: block)
-                    }
-                } else {
-                    super.loadPersistentStores(completionHandler: block)
-                }
-            }
-        }
-
-        if asyncMode {
-            log(.info, "Found \(storesToLoad.count) to load, going to background.")
-
-            dispatchQueue.async {
-                self.log(.info, "In background, processing stores.")
-                doStoreMigration()
-                self.log(.debug, "Background thread ending.")
-            }
-        } else {
-            log(.info, "Found \(storesToLoad.count) to load, doing synchronously.")
-            doStoreMigration()
-        }
+        
+        loadPersistentStoresHelper(invokeCoreDataClosure: invokeCoreDataClosure, completionHandler: block)
     }
 }

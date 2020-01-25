@@ -18,7 +18,7 @@ import CoreData
 open class PersistentCloudKitContainer: NSPersistentCloudKitContainer, PersistentContainerMigratable, PersistentContainerProtocol, LogMessageEmitter {
 
     /// Background queue for running store operations.
-    private let dispatchQueue = DispatchQueue(label: "CloudKitPersistentContainer", qos: .utility)
+    let dispatchQueue = DispatchQueue(label: "CloudKitPersistentContainer", qos: .utility)
 
     /// User's model version order.
     let modelVersionOrder: ModelVersionOrder
@@ -118,109 +118,5 @@ open class PersistentCloudKitContainer: NSPersistentCloudKitContainer, Persisten
         self.modelVersionOrder = modelVersionOrder
         self.logMessageHandler = logMessageHandler
         super.init(name: name, managedObjectModel: model)
-    }
-
-    /// Begin loading and migrating the persistent stores mentioned in `persistentStoreDescriptions` that have
-    /// not already been loaded. The completion handler is called once for each such store on the main queue
-    /// indicating whether the store has been loaded successfully.
-    ///
-    /// If the store description has `shouldMigrateStoreAutomatically` set then the container automatically
-    /// attempts multi-step migration.  If the store description also has `shouldInferMappingModelAutomatically`
-    /// set then the multi-step migration can include the use of inferred mapping models and light-weight
-    /// migration.  Once any multi-step migration is complete, Core Data is invoked to load the store and set
-    /// up the stack for use.
-    ///
-    /// These flags are both on by default.
-    ///
-    /// If *any* of the store descriptions have `shouldAddStoreAsynchronously` set then this routine returns
-    /// immediately and *all* migrations occur on a background queue.  This flag is off by default.
-    ///
-    /// If the container has multiple stores then the container tries very hard to ensure either all stores
-    /// are migrated successfully or none are.
-    ///
-    /// - Parameter block: Callback made on the main queue for each store when it has either been loaded successfully
-    ///                    or failed to load.  The `Error` here can be anything provided by
-    ///                    `NSPersistentContainer.loadPersistentStores` as well as anything from `MigrationError`
-    ///                    in this package.
-    ///
-    open override func loadPersistentStores(completionHandler block: @escaping (NSPersistentStoreDescription, Error?) -> ()) {
-        // Filter out the stores that need loading to replicate the superclass API
-        // There are probably only a handful at most of these so no need to be terribly efficient
-        let storeURLs = persistentStoreCoordinator.persistentStores.compactMap { $0.url }
-
-        if storeURLs.count > 0 {
-            log(.info, "Already have loaded stores associated with container: \(storeURLs)")
-        }
-
-        var storesToLoad: [NSPersistentStoreDescription] = []
-
-        persistentStoreDescriptions.forEach { description in
-            guard let storeURL = description.url else {
-                log(.info, "Not migrating store \(description) because no URL present")
-                return
-            }
-            if !storeURL.isFileURL {
-                log(.info, "Not migrating store \(description) because not a file:// URL")
-            } else if !description.shouldMigrateStoreAutomatically {
-                log(.info, "Not migrating store \(storeURL) because shouldMigrateStoreAutomatically clear.")
-            } else if storeURLs.contains(description.fileURL) {
-                log(.info, "Not migrating store \(storeURL) because already loaded.")
-            } else {
-                storesToLoad.append(description)
-            }
-        }
-
-        guard storesToLoad.count > 0 else {
-            log(.warning, "Found no stores to load, invoking Core Data anyway.")
-            super.loadPersistentStores(completionHandler: block)
-            return
-        }
-
-        // Load stores asynchronously if ANY of the stores have the async flag set.
-        let asyncMode = storesToLoad.reduce(false) { async, description in
-            async || description.shouldAddStoreAsynchronously
-        }
-
-        // Helper to deal with the sync/async version....
-        func doStoreMigration() {
-            var failures = false
-
-            migrateStores(descriptions: storesToLoad) { desc, error in
-                failures = true
-                self.log(.error, "Migration of store \(desc.fileURL) failed, sending user callback - \(error)")
-                if asyncMode {
-                    DispatchQueue.main.sync {
-                        block(desc, error)
-                    }
-                } else {
-                    block(desc, error)
-                }
-            }
-
-            // If we didn't get any failure callbacks then it's OK to call Core Data.
-            if !failures {
-                self.log(.info, "All store migration successful, invoking Core Data.")
-                if asyncMode {
-                    DispatchQueue.main.async {
-                        super.loadPersistentStores(completionHandler: block)
-                    }
-                } else {
-                    super.loadPersistentStores(completionHandler: block)
-                }
-            }
-        }
-
-        if asyncMode {
-            log(.info, "Found \(storesToLoad.count) to load, going to background.")
-
-            dispatchQueue.async {
-                self.log(.info, "In background, processing stores.")
-                doStoreMigration()
-                self.log(.debug, "Background thread ending.")
-            }
-        } else {
-            log(.info, "Found \(storesToLoad.count) to load, doing synchronously.")
-            doStoreMigration()
-        }
     }
 }
