@@ -8,6 +8,13 @@
 import Foundation
 import CoreData
 
+// this allows mocking Bundle for the tests
+protocol BundleProtocol {
+    func url(forResource name: String?, withExtension ext: String?) -> URL?
+}
+
+extension Bundle: BundleProtocol {}
+
 extension Sequence where Iterator.Element == Bundle {
     
     /// this looks through all bundles of the sequence and returns all `NSManagedObjectModel` with the supplied `name`
