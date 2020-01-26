@@ -137,6 +137,14 @@
 		52D6D9871BEFF229002C0205 /* TMLPersistentContainer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D97C1BEFF229002C0205 /* TMLPersistentContainer.framework */; };
 		DD7502881C68FEDE006590AF /* TMLPersistentContainer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6DA0F1BF000BD002C0205 /* TMLPersistentContainer.framework */; };
 		DD7502921C690C7A006590AF /* TMLPersistentContainer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 52D6D9F01BEFFFBE002C0205 /* TMLPersistentContainer.framework */; };
+		DD75716423DD7DBE00E825EC /* PersistentCloudKitContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD75716223DD7DBE00E825EC /* PersistentCloudKitContainer.swift */; };
+		DD75716523DD7DBE00E825EC /* PersistentCloudKitContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD75716223DD7DBE00E825EC /* PersistentCloudKitContainer.swift */; };
+		DD75716623DD7DBE00E825EC /* PersistentCloudKitContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD75716223DD7DBE00E825EC /* PersistentCloudKitContainer.swift */; };
+		DD75716723DD7DBE00E825EC /* PersistentCloudKitContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD75716223DD7DBE00E825EC /* PersistentCloudKitContainer.swift */; };
+		DD75716823DD7DBE00E825EC /* Sequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD75716323DD7DBE00E825EC /* Sequence+Extension.swift */; };
+		DD75716923DD7DBE00E825EC /* Sequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD75716323DD7DBE00E825EC /* Sequence+Extension.swift */; };
+		DD75716A23DD7DBE00E825EC /* Sequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD75716323DD7DBE00E825EC /* Sequence+Extension.swift */; };
+		DD75716B23DD7DBE00E825EC /* Sequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD75716323DD7DBE00E825EC /* Sequence+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -234,6 +242,8 @@
 		AD2FAA281CD0B6E100659CF4 /* TMLPersistentContainerTests.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = TMLPersistentContainerTests.plist; sourceTree = "<group>"; };
 		DD75027A1C68FCFC006590AF /* TMLPersistentContainer-macOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TMLPersistentContainer-macOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD75028D1C690C7A006590AF /* TMLPersistentContainer-tvOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TMLPersistentContainer-tvOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD75716223DD7DBE00E825EC /* PersistentCloudKitContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PersistentCloudKitContainer.swift; path = Sources/PersistentCloudKitContainer.swift; sourceTree = "<group>"; };
+		DD75716323DD7DBE00E825EC /* Sequence+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Sequence+Extension.swift"; path = "Sources/Sequence+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -303,6 +313,8 @@
 		02FE15321E80382700FF077C /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				DD75716223DD7DBE00E825EC /* PersistentCloudKitContainer.swift */,
+				DD75716323DD7DBE00E825EC /* Sequence+Extension.swift */,
 				02FE15341E80384A00FF077C /* PersistentContainer.swift */,
 				02FE15331E80384A00FF077C /* PersistentContainer+Migration.swift */,
 				02FE15351E80384A00FF077C /* NSPersistentStoreDescription+Metadata.swift */,
@@ -746,8 +758,10 @@
 				02FE154A1E80384A00FF077C /* Graph.swift in Sources */,
 				02FE15411E80384A00FF077C /* NSPersistentStoreDescription+Metadata.swift in Sources */,
 				02FE153F1E80384A00FF077C /* PersistentContainer+Migration.swift in Sources */,
+				DD75716823DD7DBE00E825EC /* Sequence+Extension.swift in Sources */,
 				02FE15481E80384A00FF077C /* LogMessage.swift in Sources */,
 				02FE15421E80384A00FF077C /* ModelVersionOrder.swift in Sources */,
+				DD75716423DD7DBE00E825EC /* PersistentCloudKitContainer.swift in Sources */,
 				02FE15471E80384A00FF077C /* MigrationDelegate.swift in Sources */,
 				02FE15491E80384A00FF077C /* Helpers.swift in Sources */,
 				02FE15451E80384A00FF077C /* ModelVersionEdge.swift in Sources */,
@@ -794,8 +808,10 @@
 				02FE15631E80385C00FF077C /* Graph.swift in Sources */,
 				02FE155A1E80385C00FF077C /* NSPersistentStoreDescription+Metadata.swift in Sources */,
 				02FE154C1E80385600FF077C /* PersistentContainer+Migration.swift in Sources */,
+				DD75716A23DD7DBE00E825EC /* Sequence+Extension.swift in Sources */,
 				02FE15611E80385C00FF077C /* LogMessage.swift in Sources */,
 				02FE155B1E80385C00FF077C /* ModelVersionOrder.swift in Sources */,
+				DD75716623DD7DBE00E825EC /* PersistentCloudKitContainer.swift in Sources */,
 				02FE15601E80385C00FF077C /* MigrationDelegate.swift in Sources */,
 				02FE15621E80385C00FF077C /* Helpers.swift in Sources */,
 				02FE155E1E80385C00FF077C /* ModelVersionEdge.swift in Sources */,
@@ -813,8 +829,10 @@
 				02FE156E1E80385D00FF077C /* Graph.swift in Sources */,
 				02FE15651E80385D00FF077C /* NSPersistentStoreDescription+Metadata.swift in Sources */,
 				02FE154D1E80385700FF077C /* PersistentContainer+Migration.swift in Sources */,
+				DD75716B23DD7DBE00E825EC /* Sequence+Extension.swift in Sources */,
 				02FE156C1E80385D00FF077C /* LogMessage.swift in Sources */,
 				02FE15661E80385D00FF077C /* ModelVersionOrder.swift in Sources */,
+				DD75716723DD7DBE00E825EC /* PersistentCloudKitContainer.swift in Sources */,
 				02FE156B1E80385D00FF077C /* MigrationDelegate.swift in Sources */,
 				02FE156D1E80385D00FF077C /* Helpers.swift in Sources */,
 				02FE15691E80385D00FF077C /* ModelVersionEdge.swift in Sources */,
@@ -832,8 +850,10 @@
 				02FE15581E80385B00FF077C /* Graph.swift in Sources */,
 				02FE154F1E80385B00FF077C /* NSPersistentStoreDescription+Metadata.swift in Sources */,
 				02FE154B1E80385500FF077C /* PersistentContainer+Migration.swift in Sources */,
+				DD75716923DD7DBE00E825EC /* Sequence+Extension.swift in Sources */,
 				02FE15561E80385B00FF077C /* LogMessage.swift in Sources */,
 				02FE15501E80385B00FF077C /* ModelVersionOrder.swift in Sources */,
+				DD75716523DD7DBE00E825EC /* PersistentCloudKitContainer.swift in Sources */,
 				02FE15551E80385B00FF077C /* MigrationDelegate.swift in Sources */,
 				02FE15571E80385B00FF077C /* Helpers.swift in Sources */,
 				02FE15531E80385B00FF077C /* ModelVersionEdge.swift in Sources */,
