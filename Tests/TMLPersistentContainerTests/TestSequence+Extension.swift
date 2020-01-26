@@ -22,26 +22,47 @@ class TestSequenceExtension: XCTestCase {
     
     func testManagedObjectModelsWithNameNoMomdsWithName() {
         let name = "NoMomdLikeThat.momd"
-        let bundle = MockBundle(mockedURLs: [name: URL(string: name)!])
+        guard let url = URL(string: name) else {
+            XCTFail("can't create URL for \(name) for some reason")
+            return
+        }
+        
+        let bundle = MockBundle(mockedURLs: [name: url])
         XCTAssertEqual([bundle].managedObjectModels(with: name), [])
     }
     
     func testManagedObjectModelsWithNameExtensionEdgeCase() {
         let name = "momd.notAMomd"
-        let bundle = MockBundle(mockedURLs: [name: URL(string: name)!])
+        
+        guard let url = URL(string: name) else {
+            XCTFail("can't create URL for \(name) for some reason")
+            return
+        }
+        
+        let bundle = MockBundle(mockedURLs: [name: url])
         XCTAssertEqual([bundle].managedObjectModels(with: ModelName.TestModel_Simple_1.rawValue), [])
     }
     
     func testManagedObjectModelsWithNameHappy() {
-        let bundle = MockBundle(mockedURLs: [ModelName.TestModel_Simple_1.rawValue: url(for: ModelName.TestModel_Simple_1.rawValue)!])
-        let bundle2 = MockBundle(mockedURLs: [ModelName.TestModel_MultiConfig_1.rawValue: url(for: ModelName.TestModel_MultiConfig_1.rawValue)!])
+        guard let url1 = url(for: ModelName.TestModel_Simple_1.rawValue), let url2 = url(for: ModelName.TestModel_MultiConfig_1.rawValue) else {
+            XCTFail("can't create URL for \(name) for some reason")
+            return
+        }
+        
+        let bundle = MockBundle(mockedURLs: [ModelName.TestModel_Simple_1.rawValue: url1])
+        let bundle2 = MockBundle(mockedURLs: [ModelName.TestModel_MultiConfig_1.rawValue: url2])
         let result = [bundle, bundle2].managedObjectModels(with: ModelName.TestModel_Simple_1.rawValue)
         XCTAssertEqual(result, [loadManagedObjectModel(ModelName.TestModel_Simple_1)])
     }
     
     func testManagedObjectModelsWithNameHappy2() {
-        let bundle = MockBundle(mockedURLs: [ModelName.TestModel_Simple_1.rawValue: url(for: ModelName.TestModel_Simple_1.rawValue)!])
-        let bundle2 = MockBundle(mockedURLs: [ModelName.TestModel_MultiConfig_1.rawValue: url(for: ModelName.TestModel_MultiConfig_1.rawValue)!])
+        guard let url1 = url(for: ModelName.TestModel_Simple_1.rawValue), let url2 = url(for: ModelName.TestModel_MultiConfig_1.rawValue) else {
+            XCTFail("can't create URL for \(name) for some reason")
+            return
+        }
+        
+        let bundle = MockBundle(mockedURLs: [ModelName.TestModel_Simple_1.rawValue: url1])
+        let bundle2 = MockBundle(mockedURLs: [ModelName.TestModel_MultiConfig_1.rawValue: url2])
         
         let result = [bundle, bundle2].managedObjectModels(with: ModelName.TestModel_MultiConfig_1.rawValue)
         XCTAssertEqual(result, [loadManagedObjectModel(ModelName.TestModel_MultiConfig_1)])
