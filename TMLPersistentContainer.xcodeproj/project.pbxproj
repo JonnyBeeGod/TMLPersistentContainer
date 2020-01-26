@@ -145,6 +145,9 @@
 		DD75716923DD7DBE00E825EC /* Sequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD75716323DD7DBE00E825EC /* Sequence+Extension.swift */; };
 		DD75716A23DD7DBE00E825EC /* Sequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD75716323DD7DBE00E825EC /* Sequence+Extension.swift */; };
 		DD75716B23DD7DBE00E825EC /* Sequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD75716323DD7DBE00E825EC /* Sequence+Extension.swift */; };
+		DD75716D23DD811800E825EC /* TestSequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD75716C23DD811800E825EC /* TestSequence+Extension.swift */; };
+		DD75716E23DD812000E825EC /* TestSequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD75716C23DD811800E825EC /* TestSequence+Extension.swift */; };
+		DD75716F23DD812100E825EC /* TestSequence+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD75716C23DD811800E825EC /* TestSequence+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -244,6 +247,7 @@
 		DD75028D1C690C7A006590AF /* TMLPersistentContainer-tvOS Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "TMLPersistentContainer-tvOS Tests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		DD75716223DD7DBE00E825EC /* PersistentCloudKitContainer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PersistentCloudKitContainer.swift; path = Sources/PersistentCloudKitContainer.swift; sourceTree = "<group>"; };
 		DD75716323DD7DBE00E825EC /* Sequence+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Sequence+Extension.swift"; path = "Sources/Sequence+Extension.swift"; sourceTree = "<group>"; };
+		DD75716C23DD811800E825EC /* TestSequence+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TestSequence+Extension.swift"; path = "Tests/TMLPersistentContainerTests/TestSequence+Extension.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -346,6 +350,7 @@
 				02FE158C1E80394300FF077C /* TestCreateDelete.swift */,
 				02FE158E1E80394300FF077C /* TestCase.swift */,
 				02FE158F1E80394300FF077C /* TestBugs.swift */,
+				DD75716C23DD811800E825EC /* TestSequence+Extension.swift */,
 				02FE15901E80394300FF077C /* SimpleModel.swift */,
 				02FE15911E80394300FF077C /* MultiConfigModel.swift */,
 				02FE15921E80394300FF077C /* ModelNames.swift */,
@@ -795,6 +800,7 @@
 				02FE15951E80394300FF077C /* TestSimpleMigrate.swift in Sources */,
 				02FE15C21E80394300FF077C /* TestLogging.swift in Sources */,
 				02FE159E1E80394300FF077C /* TestModelVersionOrder.swift in Sources */,
+				DD75716D23DD811800E825EC /* TestSequence+Extension.swift in Sources */,
 				02FE15A71E80394300FF077C /* TestModel_Simple_Mapping12.xcmappingmodel in Sources */,
 				02FE15D71E80394300FF077C /* MultiConfigModel.swift in Sources */,
 			);
@@ -887,6 +893,7 @@
 				02FE15961E80394300FF077C /* TestSimpleMigrate.swift in Sources */,
 				02FE15C31E80394300FF077C /* TestLogging.swift in Sources */,
 				02FE159F1E80394300FF077C /* TestModelVersionOrder.swift in Sources */,
+				DD75716E23DD812000E825EC /* TestSequence+Extension.swift in Sources */,
 				02FE15A81E80394300FF077C /* TestModel_Simple_Mapping12.xcmappingmodel in Sources */,
 				02FE15D81E80394300FF077C /* MultiConfigModel.swift in Sources */,
 			);
@@ -916,6 +923,7 @@
 				02FE15971E80394300FF077C /* TestSimpleMigrate.swift in Sources */,
 				02FE15C41E80394300FF077C /* TestLogging.swift in Sources */,
 				02FE15A01E80394300FF077C /* TestModelVersionOrder.swift in Sources */,
+				DD75716F23DD812100E825EC /* TestSequence+Extension.swift in Sources */,
 				02FE15A91E80394300FF077C /* TestModel_Simple_Mapping12.xcmappingmodel in Sources */,
 				02FE15D91E80394300FF077C /* MultiConfigModel.swift in Sources */,
 			);

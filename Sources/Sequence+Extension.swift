@@ -15,7 +15,7 @@ protocol BundleProtocol {
 
 extension Bundle: BundleProtocol {}
 
-extension Sequence where Iterator.Element == Bundle {
+extension Sequence where Iterator.Element: BundleProtocol {
     
     /// this looks through all bundles of the sequence and returns all `NSManagedObjectModel` with the supplied `name`
     /// - Parameters:

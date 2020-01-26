@@ -24,24 +24,6 @@ open class TestCase: XCTestCase {
         continueAfterFailure = true
     }
     
-    /// Load an NSManagedObjectModel for a particular model[set]
-    private func loadManagedObjectModel(_ file: ModelName) -> NSManagedObjectModel {
-        // Our models are stored in the test bundle so we cannot use Bundle.main to find it, either
-        // directly or indirectly via the 1-arg init version of [NS]PersistentContainer.
-        // This locates the test bundle via the location of this current class's binary.
-        let unitTestBundle = Bundle(for: type(of: self))
-        
-        guard let modelURL = unitTestBundle.url(forResource: file.rawValue, withExtension: "momd") else {
-            fatalError("Couldn't find \(file.rawValue).momd in the bundle")
-        }
-        
-        guard let managedObjectModel = NSManagedObjectModel(contentsOf: modelURL) else {
-            fatalError("\(file.rawValue).momd doesn't seem to be a managed object model")
-        }
-        
-        return managedObjectModel
-    }
-    
     /// Name of the stores on disk
 
     private static let persistentStoreNames = ["TestStore1", "TestStore2"]
@@ -231,5 +213,28 @@ func loggingCallback(msg: LogMessage) {
     print("LOG: \(msg)")
     if let loggingWatcher = loggingWatcher {
         loggingWatcher(msg.body())
+    }
+}
+
+extension XCTestCase {
+    func url(for fileName: String) -> URL? {
+        // Our models are stored in the test bundle so we cannot use Bundle.main to find it, either
+        // directly or indirectly via the 1-arg init version of [NS]PersistentContainer.
+        // This locates the test bundle via the location of this current class's binary.
+        let unitTestBundle = Bundle(for: type(of: self))
+        return unitTestBundle.url(forResource: fileName, withExtension: "momd")
+    }
+    /// Load an NSManagedObjectModel for a particular model[set]
+    func loadManagedObjectModel(_ file: ModelName) -> NSManagedObjectModel {
+
+        guard let modelURL = url(for: file.rawValue) else {
+            fatalError("Couldn't find \(file.rawValue).momd in the bundle")
+        }
+        
+        guard let managedObjectModel = NSManagedObjectModel(contentsOf: modelURL) else {
+            fatalError("\(file.rawValue).momd doesn't seem to be a managed object model")
+        }
+        
+        return managedObjectModel
     }
 }
